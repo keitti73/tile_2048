@@ -126,16 +126,15 @@ impl Game{
         };
 
         for y in 0..4{
-            for x in (0..3).rev(){
+            for x in (0..4).rev(){
                 if self.bord.bord[x][y] == Cell::None{
                     continue;
                 }
                 else{
-                    for i in 0..3{
+                    for i in 0..(3-x){
                         if self.bord.bord[3-i][y]== Cell::None{
                             self.bord.bord[3-i][y] = self.bord.bord[x][y].clone();
                             self.bord.bord[x][y] = Cell::None;
-                            break
                         }
                     }
                 }
@@ -175,12 +174,12 @@ impl Game{
         };
 
         for y in 0..4{
-            for x in 1..4{
+            for x in 0..4{
                 if self.bord.bord[x][y] == Cell::None{
                     continue;
                 }
                 else{
-                    for i in 0..4{
+                    for i in 0..x{
                         if self.bord.bord[i][y]== Cell::None{
                             self.bord.bord[i][y] = self.bord.bord[x][y].clone();
                             self.bord.bord[x][y] = Cell::None;
@@ -222,12 +221,12 @@ impl Game{
         };
 
         for x in 0..4{
-            for y in 1..4{
+            for y in 0..4{
                 if self.bord.bord[x][y] == Cell::None{
                     continue;
                 }
                 else{
-                    for i in 0..4{
+                    for i in 0..y{
                         if self.bord.bord[x][i] == Cell::None{
                             self.bord.bord[x][i] = self.bord.bord[x][y].clone();
                             self.bord.bord[x][y] = Cell::None;
@@ -269,15 +268,15 @@ impl Game{
         };
 
         for x in 0..4{
-            for y in (0..3).rev(){
+            for y in (0..4).rev(){
                 if self.bord.bord[x][y] == Cell::None{
                     continue;
                 }
                 else{
-                    for i in 0..3{
+                    for i in 0..(3-y){
                         if self.bord.bord[x][3-i] == Cell::None{
                             self.bord.bord[x][3-i] = self.bord.bord[x][y].clone();
-                            self.bord.bord[x][y] = Cell::None;
+                            self.bord.bord[x][y] = Cell::None
                         }
                     }
                 }
@@ -288,7 +287,6 @@ impl Game{
             self.add_number()
         }
     }
-
 }
 
 fn main(){
