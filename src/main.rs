@@ -11,6 +11,15 @@ enum Cell {
     None
 }
 
+impl Cell {
+    fn output_value(self)-> usize{
+        match self{
+            Cell::None => return 0,
+            Cell::Tile(Tile { value }) => value
+        }
+    }
+}
+
 struct Bord{
     bord : [[Cell;4];4]
 }
@@ -37,9 +46,9 @@ impl Game{
 
     fn display(&self){
         println!("+---+---+---+---+");
-        for x in 0..4{
+        for y in 0..4{
             print!("|");
-            for y in 0..4{
+            for x in 0..4{
                 match self.bord.bord[x][y]{
                     Cell::Tile(Tile { value })=> print!(" {} |",value),
                     Cell::None => print!("   |")
@@ -51,6 +60,19 @@ impl Game{
     }
 
     fn add_number(& mut self){
+        let mut i :usize = 0;
+        for x in 0..4{
+            for y in 0..4{
+                if self.bord.bord[x][y]==Cell::None{
+                    i = i+1;
+                }
+            }
+        }
+        if i == 0 {
+            return ()
+            //game over
+        }
+
         loop{
             let rng = (rand::thread_rng().gen_range(1..4),rand::thread_rng().gen_range(1..4));
 
@@ -63,9 +85,45 @@ impl Game{
             }
         }
     }
+
+    fn move_right(&mut self){
+        for y in 0..4{
+            for x in (0..4).rev(){
+                for xx in 1..x{
+                    if self.bord.bord[x][y] == Cell::None{
+                        continue;
+                    }
+                    else if self.bord.bord[x][y] == self.bord.bord[x-xx][y]{
+                            let mut value = self.bord.bord[x][y].output_value().clone();
+                            value = value*2;
+                            self.bord.bord[x][y] = Cell::Tile(Tile{value: value});
+                            self.bord.bord[x-xx][y] = Cell::None
+                    }
+                }
+            }
+        };
+
+        for y in 0..4{
+            let mut i = 0;
+            for x in (0..3).rev(){
+                if self.bord.bord[x][y] == Cell::None{
+                    continue;
+                }
+                else{
+                    self.bord.bord[3-i][y] = self.bord.bord[x][y].clone();
+                    self.bord.bord[x][y] = Cell::None;
+                    i+=1
+                }
+            }
+        }
+        self.add_number()
+    }
+
 }
 
 fn main(){
     let mut new_game = Game::new();
+    new_game.display();
+    new_game.move_right();
     new_game.display()
 }
