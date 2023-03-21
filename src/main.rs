@@ -46,17 +46,30 @@ impl Game{
     }
 
     fn display(&self){
-        println!("+---+---+---+---+");
+        println!("+----+----+----+----+");
         for y in 0..4{
             print!("|");
             for x in 0..4{
                 match self.bord.bord[x][y]{
-                    Cell::Tile(Tile { value })=> print!(" {} |",value),
-                    Cell::None => print!("   |")
+                    Cell::Tile(Tile { value })=> {
+                        if value > 1000{
+                            print!("{}|",value)
+                        }
+                        else if value > 100{
+                            print!(" {}|",value)
+                        }
+                        else if value > 10{
+                            print!(" {} |",value)
+                        }
+                        else{
+                            print!("  {} |",value)
+                        }
+                    },
+                    Cell::None => print!("    |")
                 };
             }
             println!("");
-            println!("+---+---+---+---+");
+            println!("+----+----+----+----+");
         };
     }
 
@@ -88,17 +101,25 @@ impl Game{
     }
 
     fn move_right(&mut self){
+        let chack = self.bord.bord.clone();
         for y in 0..4{
             for x in (0..4).rev(){
-                for xx in 1..(x+1){
-                    if self.bord.bord[x][y] == Cell::None{
-                        continue;
-                    }
-                    else if self.bord.bord[x][y] == self.bord.bord[x-xx][y]{
+                if self.bord.bord[x][y] == Cell::None{
+                    continue;
+                }
+                else{
+                    for xx in 1..(x+1){
+                        if self.bord.bord[x][y] == self.bord.bord[x-xx][y]{
                             let mut value = self.bord.bord[x][y].output_value().clone();
                             value = value*2;
                             self.bord.bord[x][y] = Cell::Tile(Tile{value: value});
-                            self.bord.bord[x-xx][y] = Cell::None
+                            self.bord.bord[x-xx][y] = Cell::None;
+                            break;
+                        }else if self.bord.bord[x-xx][y] == Cell::None{
+                            continue;
+                        }else{
+                            break;
+                        }
                     }
                 }
             }
@@ -120,21 +141,34 @@ impl Game{
                 }
             }
         }
-        self.add_number()
+
+        if chack != self.bord.bord{
+            self.add_number()
+        }
     }
 
     fn move_left(&mut self){
+        let chack = self.bord.bord.clone();
         for y in 0..4{
             for x in 0..4{
-                for xx in 1..(4-x){
-                    if self.bord.bord[x][y] == Cell::None{
-                        continue;
-                    }
-                    else if self.bord.bord[x][y] == self.bord.bord[x+xx][y]{
+                if self.bord.bord[x][y] == Cell::None{
+                    continue;
+                }
+                else{
+                    for xx in 1..(4-x){
+                        if self.bord.bord[x][y] == self.bord.bord[x+xx][y]{
                             let mut value = self.bord.bord[x][y].output_value().clone();
                             value = value*2;
                             self.bord.bord[x][y] = Cell::Tile(Tile{value: value});
-                            self.bord.bord[x+xx][y] = Cell::None
+                            self.bord.bord[x+xx][y] = Cell::None;
+                            break;
+                        }
+                        else if self.bord.bord[x+xx][y] == Cell::None{
+                            continue;
+                        }
+                        else{
+                            break;
+                        }
                     }
                 }
             }
@@ -155,21 +189,33 @@ impl Game{
                 }
             }
         }
-        self.add_number()
+
+        if chack != self.bord.bord{
+            self.add_number()
+        }
     }
 
     fn move_up(&mut self){
+        let chack = self.bord.bord.clone();
         for x in 0..4{
             for y in 0..4{
-                for yy in 1..(4-y){
-                    if self.bord.bord[x][y] == Cell::None{
-                        continue;
-                    }
-                    else if self.bord.bord[x][y] == self.bord.bord[x][y+yy]{
+                if self.bord.bord[x][y] == Cell::None{
+                    continue;
+                }else{
+                    for yy in 1..(4-y){
+                        if self.bord.bord[x][y] == self.bord.bord[x][y+yy]{
                             let mut value = self.bord.bord[x][y].output_value().clone();
                             value = value*2;
                             self.bord.bord[x][y] = Cell::Tile(Tile{value: value});
-                            self.bord.bord[x][y+yy] = Cell::None
+                            self.bord.bord[x][y+yy] = Cell::None;
+                            break;
+                        }
+                        else if self.bord.bord[x][y+yy] == Cell::None{
+                            continue;
+                        }
+                        else{
+                            break;
+                        }
                     }
                 }
             }
@@ -190,21 +236,33 @@ impl Game{
                 }
             }
         }
-        self.add_number()
+
+        if chack != self.bord.bord{
+            self.add_number()
+        }
     }
 
     fn move_down(&mut self){
+        let chack = self.bord.bord.clone();
         for x in 0..4{
             for y in (0..4).rev(){
-                for yy in 1..(y+1){
-                    if self.bord.bord[x][y] == Cell::None{
-                        continue;
-                    }
-                    else if self.bord.bord[x][y] == self.bord.bord[x][y-yy]{
+                if self.bord.bord[x][y] == Cell::None{
+                    continue;
+                }
+                else{
+                    for yy in 1..(y+1){
+                        if self.bord.bord[x][y] == self.bord.bord[x][y-yy]{
                             let mut value = self.bord.bord[x][y].output_value().clone();
                             value = value*2;
                             self.bord.bord[x][y] = Cell::Tile(Tile{value: value});
-                            self.bord.bord[x][y-yy] = Cell::None
+                            self.bord.bord[x][y-yy] = Cell::None;
+                            break;
+                        }else if self.bord.bord[x][y-yy] == Cell::None{
+                            continue;
+                        }
+                        else{
+                            break;
+                        }
                     }
                 }
             }
@@ -225,7 +283,10 @@ impl Game{
                 }
             }
         }
-        self.add_number()
+
+        if chack != self.bord.bord{
+            self.add_number()
+        }
     }
 
 }
